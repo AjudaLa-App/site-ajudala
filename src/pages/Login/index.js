@@ -9,26 +9,27 @@ import Swal from 'sweetalert2'
 
 export default function Login() {
 
-    const [id, setId] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const history = useHistory();
 
-    function handleLoginErr () {
+    function handleLoginErr() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Algo deu errado, tente novamente',
-          })
+        })
     }
 
     async function handleLogin(e) {
         e.preventDefault();
+
         try {
-            const response = await api.post('sessions', { id });
-          
-            localStorage.setItem('ongId', id);
+            const response = await api.post('sessions', { email, password });
+
+            localStorage.setItem('ongEmail', email);
             localStorage.setItem('ongName', response.data.name);
 
-            
             history.push('/profile');
         } catch (err) {
             handleLoginErr();
@@ -38,13 +39,20 @@ export default function Login() {
     return (
         <div className="logon-container">
             <section className="form">
-                <img src={logoImg}  alt="Be The Hero"></img>
+                <img src={logoImg} alt="Be The Hero"></img>
                 <form onSubmit={handleLogin}>
                     <h1>Faça seu Logon</h1>
                     <input
-                        placeholder="Sua ID"
-                        value={id}
-                        onChange={e => setId(e.target.value)}
+                        placeholder="Seu email"
+                        value={email}
+                        type="email"
+                        onChange={e => setEmail(e.target.value)}
+                    />
+                    <input
+                        placeholder="Sua senha"
+                        value={password}
+                        type="password"
+                        onChange={e => setPassword(e.target.value)}
                     />
                     <button className="button" type="submit">Entrar</button>
                     <Link className="back-link" to="/register">
